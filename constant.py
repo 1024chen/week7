@@ -3,8 +3,6 @@ url = 'https://www.hko.gov.hk/sc/cis/normal/1981_2010/dnormal'
 root_url = 'https://www.hko.gov.hk/'
 regulars = r'src="(..+?\.jpg)"'
 
-week7_uri = '10.htm'
-
 table_header = {
     '日期': 'date',
     '平均气压': 'press',
