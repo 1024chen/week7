@@ -90,8 +90,19 @@ def crawl_all_tables():
 
 # 爬取单月的表格
 def crawl_tables(month):
-    soup = get_soup(get_response_bytes(url, trans_month(month)))
-    tables = soup.findAll('tbody')
+    tables = get_soup(get_response_bytes(url, trans_month(month))).findAll('tbody')
+    content = get_table_lines(tables)
+
+    max_len = get_max_len(content)
+    # 不显示观测地点，对齐最后一行
+    for elem in content:
+        while len(content[elem]) == max_len:
+            content[elem].pop()
+    trans_to_chinese_head(content, month)
+
+
+# 获取表格里的列内容
+def get_table_lines(tables):
     content = {}
     for th in table_h1:
         line = []
@@ -103,15 +114,7 @@ def crawl_tables(month):
         for con in tables[1].findAllNext(headers=th):
             line.append(con.get_text())
         content[th] = line
-
-    max_len = get_max_len(content)
-
-    # 不显示观测地点
-    for elem in content:
-        while len(content[elem]) == max_len:
-            content[elem].pop()
-
-    trans_to_chinese_head(content, month)
+    return content
 
 
 # 转换汉字表头并保存
@@ -138,7 +141,7 @@ def write_to_csv(write_content={}, write_to_file='./weather.csv'):
 if __name__ == '__main__':
     # 获取1到12月的所有表格数据并保存
     crawl_all_tables()
-    # 获取十所有十月份的天气表格
+    # 获取所有十月份的天气表格
     # crawl_tables(10)
     # 想获取1到12月的所有图片并保存就取消下面的注释
     # crawl_all_images()
