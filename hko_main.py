@@ -98,8 +98,10 @@ def crawl_tables(month):
     for elem in content:
         while len(content[elem]) == max_len:
             content[elem].pop()
-    # trans_to_chinese_head(content, month)
-    save_to(content, month)
+    # 生成汉字表头
+    trans_to_chinese_head(content, month)
+    # 保存英文表头
+    # save_to(content, month)
 
 
 # 获取表格里的列内容
@@ -121,9 +123,8 @@ def get_table_lines(tables):
 # 转换汉字表头并保存
 def trans_to_chinese_head(content, month):
     temp = {}
-    for elem in content:
-        if [elem in table_header]:
-            temp[table_header[elem]] = content[elem]
+    for key, value in table_header.items():
+        temp[key] = content[value]
     write_to_csv(temp, creat_dir(get_current_loc(), 'csv_files') + '\\' + trans_month(month) + '.csv')
 
 
